@@ -14,15 +14,6 @@ body {
 
 #sidebar {
     background-color: var(--discord-darkest);
-    transition: transform 0.3s ease-in-out;
-}
-
-#sidebar.active {
-    transform: translateX(0);
-}
-
-#sidebar-overlay {
-    transition: opacity 0.3s ease-in-out;
 }
 
 .section-link {
@@ -51,21 +42,44 @@ body {
     line-height: 1;
 }
 
-@media (max-width: 768px) {
-    #sidebar {
-        position: fixed;
-        top: 0;
-        left: 0;
-        bottom: 0;
-        transform: translateX(-100%);
-        z-index: 50;
-    }
+#menu-toggle {
+    transition: transform 0.3s ease-in-out;
+}
 
-    #sidebar.active {
+#menu-toggle:hover {
+    transform: scale(1.1);
+}
+
+#section-overlay {
+    transition: opacity 0.3s ease-in-out;
+}
+
+#section-card.active {
+    transform: scale(1);
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(-100%);
+    }
+    to {
         transform: translateX(0);
     }
+}
 
-    #sidebar-overlay.active {
-        display: block;
+@keyframes slideOut {
+    from {
+        transform: translateX(0);
     }
+    to {
+        transform: translateX(-100%);
+    }
+}
+
+#sidebar.active {
+    animation: slideIn 0.3s forwards;
+}
+
+#sidebar.inactive {
+    animation: slideOut 0.3s forwards;
 }
