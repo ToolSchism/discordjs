@@ -322,7 +322,6 @@ function closeSection() {
 function toggleSidebar() {
     const sidebar = document.getElementById('sidebar');
     sidebar.classList.toggle('active');
-    sidebar.classList.toggle('inactive');
 }
 
 document.addEventListener('DOMContentLoaded', () => {
