@@ -5,37 +5,58 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Discord.js v14 Bot Tutorial</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/prism.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css">
     <link rel="stylesheet" href="styles.css">
 </head>
-<body class="min-h-screen bg-discordDark text-gray-200">
-    <nav class="navbar fixed top-0 left-0 right-0 z-10 p-4 bg-discordDarkest">
-        <div class="container mx-auto">
-            <h1 class="text-xl font-bold mb-2">Discord.js v14 Bot Tutorial</h1>
-            <div class="flex flex-wrap gap-2" id="nav-buttons">
-                
+<body class="bg-discordDark text-gray-200">
+    <div class="flex h-screen overflow-hidden">
+        <!-- Sidebar -->
+        <div id="sidebar" class="bg-discordDarkest w-64 flex-shrink-0 hidden md:block">
+            <div class="p-4">
+                <h2 class="text-xl font-bold mb-4">Sections</h2>
+                <ul id="section-list" class="space-y-2">
+                    <!-- Section links will be added here dynamically -->
+                </ul>
             </div>
         </div>
-    </nav>
 
-    <div id="content" class="container mx-auto mt-32 p-4">
-        <h2 class="text-2xl font-bold mb-4">Welcome to the Discord.js v14 Bot Tutorial</h2>
-        <p class="mb-4">Click on a section in the navbar to get started!</p>
-        <div class="mt-4 p-4 bg-yellow-800 text-yellow-100 rounded-lg">
-            <p class="font-bold">Disclaimer:</p>
-            <p>This website is not affiliated with Discord or the creators of discord.js. It is a personal project created to help people learn about Discord bot development.</p>
-            <p2>This website assumes you know the basics of JavaScript.</p2>
+        <!-- Main content -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <!-- Navbar -->
+            <header class="bg-discordDarkest p-4 flex items-center justify-between">
+                <h1 class="text-xl font-bold">Discord.js v14 Bot Tutorial</h1>
+                <button id="menu-toggle" class="md:hidden">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </header>
+
+            <!-- Content area -->
+            <main id="content" class="flex-1 overflow-y-auto p-4">
+                <h2 class="text-2xl font-bold mb-4">Welcome to the Discord.js v14 Bot Tutorial</h2>
+                <p>Select a section from the sidebar to get started!</p>
+
+                <!-- Disclaimer -->
+                <div class="mt-4 p-4 bg-yellow-800 text-yellow-100 rounded-lg">
+                    <p>Disclaimer: This website is not affiliated with Discord or the creators of discord.js. It is a personal project created to help people learn about Discord bot development.</p>
+                    <p class="mt-2">This website assumes you know the basics of JavaScript.</p>
+                </div>
+            </main>
         </div>
     </div>
 
-    <div id="overlay" class="fixed inset-0 bg-black bg-opacity-50 hidden flex justify-center items-center p-4">
-        <div id="card" class="card rounded-lg p-6 w-full max-w-2xl max-h-[80vh] overflow-y-auto relative bg-discordDarker">
-            <button onclick="closeCard()" class="absolute top-2 right-2 text-gray-400 hover:text-white">&times;</button>
-            <div id="cardContent"></div>
+    <!-- Overlay for mobile sidebar -->
+    <div id="sidebar-overlay" class="fixed inset-0 bg-black bg-opacity-50 hidden md:hidden"></div>
+
+    <!-- Section content overlay -->
+    <div id="section-overlay" class="fixed inset-0 bg-black bg-opacity-50 hidden flex justify-center items-center p-4">
+        <div id="section-card" class="bg-discordDarker rounded-lg p-6 w-full max-w-2xl max-h-[80vh] overflow-y-auto relative">
+            <button id="close-section" class="absolute top-2 right-2 text-gray-400 hover:text-gray-200">×</button>
+            <div id="section-content"></div>
         </div>
     </div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/prism.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
