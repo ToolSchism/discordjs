@@ -278,6 +278,20 @@ client.login('YOUR_BOT_TOKEN');
     `
 };
 
+function createButtons() {
+    const navButtons = document.getElementById('nav-buttons');
+    for (const sectionKey in sections) {
+        const button = document.createElement('button');
+        button.textContent = sectionKey.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+        button.classList.add('nav-button');
+        button.onclick = () => showSection(sectionKey);
+        navButtons.appendChild(button);
+    }
+}
+
+// Call this function when the page loads
+document.addEventListener('DOMContentLoaded', createButtons);
+
 function showSection(sectionName) {
     const overlay = document.getElementById('overlay');
     const cardContent = document.getElementById('cardContent');
