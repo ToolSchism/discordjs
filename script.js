@@ -121,6 +121,100 @@ if (command === 'ban') {
 }
         </code></pre>
     `,
+    'handling-commands': `
+        <h2 class="text-2xl font-bold mb-4">Handling Commands</h2>
+        <p class="mb-4">As your bot grows, you'll want more efficient ways to handle commands. Here are two approaches:</p>
+        
+        <h3 class="text-xl font-semibold mb-2">Using Switch Cases</h3>
+        <p class="mb-2">For bots with a moderate number of commands (around 5-10), using a switch statement can be more readable than multiple if-else statements:</p>
+        <pre class="code-block"><code class="language-javascript">
+client.on('messageCreate', (message) => {
+  if (!message.content.startsWith('!')) return;
+
+  const args = message.content.slice(1).trim().split(/ +/);
+  const command = args.shift().toLowerCase();
+
+  switch(command) {
+    case 'ping':
+      message.reply('Pong!');
+      break;
+    case 'echo':
+      if (args.length) message.channel.send(args.join(' '));
+      break;
+    case 'ban':
+      // Ban logic here
+      break;
+    // Add more cases as needed
+    default:
+      message.reply('Unknown command');
+  }
+});
+        </code></pre>
+
+        <h3 class="text-xl font-semibold mb-2 mt-4">Using a Command Handler</h3>
+        <p class="mb-2">For bots with 10+ commands, it's better to use a command handler. This involves creating separate files for each command and dynamically loading them. Here's a basic example:</p>
+        <pre class="code-block"><code class="language-javascript">
+// bot.js
+const fs = require('fs');
+const { Client, Collection, GatewayIntentBits } = require('discord.js');
+
+const client = new Client({
+  intents: [
+    GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.MessageContent,
+  ]
+});
+
+client.commands = new Collection();
+const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
+
+for (const file of commandFiles) {
+  const command = require(\`./commands/\${file}\`);
+  client.commands.set(command.name, command);
+}
+
+client.on('messageCreate', (message) => {
+  if (!message.content.startsWith('!') || message.author.bot) return;
+
+  const args = message.content.slice(1).trim().split(/ +/);
+  const commandName = args.shift().toLowerCase();
+
+  if (!client.commands.has(commandName)) return;
+
+  try {
+    client.commands.get(commandName).execute(message, args);
+  } catch (error) {
+    console.error(error);
+    message.reply('There was an error executing that command!');
+  }
+});
+
+client.login('YOUR_BOT_TOKEN');
+        </code></pre>
+
+        <p class="mt-2">Then, create a 'commands' folder and add individual command files:</p>
+        <pre class="code-block"><code class="language-javascript">
+// commands/ping.js
+module.exports = {
+  name: 'ping',
+  description: 'Ping!',
+  execute(message, args) {
+    message.channel.send('Pong!');
+  },
+};
+
+// commands/echo.js
+module.exports = {
+  name: 'echo',
+  description: 'Echoes a message',
+  execute(message, args) {
+    if (args.length) message.channel.send(args.join(' '));
+  },
+};
+        </code></pre>
+        <p class="mt-2">This approach makes your code more modular and easier to maintain as your bot grows.</p>
+    `,
     'full-bot': `
         <h2 class="text-2xl font-bold mb-4">Putting It All Together: Full Bot</h2>
         <p>Here's a basic bot that incorporates all the concepts we've covered:</p>
