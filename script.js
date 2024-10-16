@@ -285,6 +285,7 @@ function createButtons() {
         button.textContent = sectionKey.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
         button.classList.add('nav-button');
         button.onclick = () => showSection(sectionKey);
+        console.log("Button added");
         navButtons.appendChild(button);
     }
 }
