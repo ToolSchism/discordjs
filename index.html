@@ -56,6 +56,10 @@
     <div id="content" class="container mx-auto mt-20 p-4">
         <h2 class="text-2xl font-bold mb-4">Welcome to the Discord.js v14 Bot Tutorial</h2>
         <p>Click on a section in the navbar to get started!</p>
+        <div class="mt-4 p-4 bg-yellow-800 text-yellow-100 rounded-lg">
+            <p class="font-bold">Disclaimer:</p>
+            <p>This tutorial is not affiliated with Discord or the creators of discord.js. It is a personal project created to help people learn about Discord bot development.</p>
+        </div>
     </div>
 
     <div id="overlay" class="fixed inset-0 bg-black bg-opacity-50 hidden flex justify-center items-center">
@@ -244,17 +248,29 @@ client.login('YOUR_BOT_TOKEN');
             cardContent.innerHTML = sections[sectionName];
             overlay.classList.remove('hidden');
             Prism.highlightAll();
+            // Update URL
+            history.pushState(null, '', `${window.location.pathname}#${sectionName}`);
         }
 
         function closeCard() {
             const overlay = document.getElementById('overlay');
             overlay.classList.add('hidden');
+            // Remove hash from URL
+            history.pushState(null, '', window.location.pathname);
         }
 
         // Close the card when clicking outside of it
         document.getElementById('overlay').addEventListener('click', function(event) {
             if (event.target === this) {
                 closeCard();
+            }
+        });
+
+        // Check for hash in URL on page load
+        window.addEventListener('load', function() {
+            const hash = window.location.hash.substring(1);
+            if (hash && sections[hash]) {
+                showSection(hash);
             }
         });
 
