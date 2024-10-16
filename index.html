@@ -7,26 +7,23 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/prism.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css">
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        epic: {
-                            light: '#f5f5f5',
-                            dark: '#121212',
-                        },
-                    },
-                },
-            },
+    <style>
+        /* Custom styles */
+        .section-title {
+            @apply text-2xl font-bold mb-4;
         }
-    </script>
+        .subsection-title {
+            @apply text-xl font-semibold mb-3 mt-6;
+        }
+        .code-block {
+            @apply mt-4 mb-6;
+        }
+    </style>
 </head>
-<body class="bg-epic-light dark:bg-epic-dark text-gray-900 dark:text-gray-100 transition-colors duration-200">
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-200 transition-colors duration-200">
     <div id="app" class="min-h-screen p-4">
         <div class="max-w-4xl mx-auto bg-white dark:bg-gray-800 rounded-3xl overflow-hidden shadow-2xl">
-            <nav class="p-4 bg-gray-100 dark:bg-gray-700">
+            <nav class="p-4 bg-gray-200 dark:bg-gray-700">
                 <div class="container mx-auto flex justify-between items-center">
                     <h1 class="text-xl font-bold">Discord.js v14 Bot Tutorial</h1>
                     <button id="themeToggle" class="p-2 rounded-full hover:bg-gray-300 dark:hover:bg-gray-600">
@@ -38,20 +35,29 @@
             </nav>
             
             <main class="container mx-auto p-6">
-                <section class="mb-8">
-                    <h2 class="text-2xl font-bold mb-4">Setting up a Basic Discord Bot</h2>
+                <section>
+                    <h2 class="section-title">1. Setting Up Your Development Environment</h2>
                     <ol class="list-decimal list-inside space-y-2">
-                        <li>Install Node.js and npm</li>
+                        <li>Install Node.js and npm from <a href="https://nodejs.org" class="text-blue-600 dark:text-blue-400 hover:underline">nodejs.org</a></li>
+                        <li>Choose and install a code editor or IDE:
+                            <ul class="list-disc list-inside ml-6 mt-2">
+                                <li><a href="https://code.visualstudio.com/" class="text-blue-600 dark:text-blue-400 hover:underline">Visual Studio Code</a> (recommended for beginners)</li>
+                                <li><a href="https://www.sublimetext.com/" class="text-blue-600 dark:text-blue-400 hover:underline">Sublime Text</a></li>
+                                <li><a href="https://www.jetbrains.com/webstorm/" class="text-blue-600 dark:text-blue-400 hover:underline">WebStorm</a> (paid, but powerful)</li>
+                            </ul>
+                        </li>
                         <li>Create a new project directory</li>
+                        <li>Open a terminal in your project directory</li>
                         <li>Initialize a new npm project: <code class="px-2 py-1 rounded bg-gray-200 dark:bg-gray-700">npm init -y</code></li>
                         <li>Install discord.js: <code class="px-2 py-1 rounded bg-gray-200 dark:bg-gray-700">npm install discord.js</code></li>
                         <li>Create a new file named <code class="px-2 py-1 rounded bg-gray-200 dark:bg-gray-700">bot.js</code></li>
                     </ol>
                 </section>
                 
-                <section class="mb-8">
-                    <h2 class="text-2xl font-bold mb-4">Basic Bot Code</h2>
-                    <pre><code class="language-javascript">
+                <section class="mt-8">
+                    <h2 class="section-title">2. Basic Bot Setup</h2>
+                    <p class="mb-4">Here's the basic structure for your Discord bot:</p>
+                    <pre class="code-block"><code class="language-javascript">
 const { Client, GatewayIntentBits } = require('discord.js');
 const client = new Client({
   intents: [
@@ -74,57 +80,35 @@ client.on('messageCreate', (message) => {
 
 client.login('YOUR_BOT_TOKEN');
                     </code></pre>
+                    <p>Replace 'YOUR_BOT_TOKEN' with your actual bot token from the Discord Developer Portal.</p>
                 </section>
                 
-                <section class="mb-8">
-                    <h2 class="text-2xl font-bold mb-4">Setting Bot Status/Activity</h2>
-                    <p class="mb-4">You can set your bot's status using the <code>setActivity</code> method:</p>
-                    <pre><code class="language-javascript">
-client.user.setActivity('with Discord.js', { type: 'PLAYING' });
-                    </code></pre>
-                    <p class="mt-4">Other activity types include 'WATCHING', 'LISTENING', and 'STREAMING'.</p>
+                <section class="mt-8">
+                    <h2 class="section-title">3. Starting Your Bot</h2>
+                    <p>To start your bot, open a terminal in your project directory and run:</p>
+                    <pre class="code-block"><code class="language-bash">node bot.js</code></pre>
+                    <p>If everything is set up correctly, you should see "Logged in as [YourBotName]!" in the console.</p>
                 </section>
 
-                <section class="mb-8">
-                    <h2 class="text-2xl font-bold mb-4">Example Command: Ban User</h2>
-                    <p class="mb-4">Here's an example of a ban command that checks for permissions and uses arguments:</p>
-                    <pre><code class="language-javascript">
+                <section class="mt-8">
+                    <h2 class="section-title">4. Understanding Arguments</h2>
+                    <p>Arguments are the words or phrases that come after a command. Let's create a simple argument handler:</p>
+                    <pre class="code-block"><code class="language-javascript">
 client.on('messageCreate', (message) => {
-  // Check if the message starts with the command prefix and is "ban"
-  if (message.content.startsWith('!ban')) {
-    // Check if the user has permission to ban members
-    if (!message.member.permissions.has('BAN_MEMBERS')) {
-      return message.reply("You don't have permission to use this command.");
-    }
+  if (!message.content.startsWith('!')) return;
 
-    // Get the mentioned user
-    const user = message.mentions.users.first();
-    
-    // If no user is mentioned, return an error
-    if (!user) {
-      return message.reply("You need to mention a user to ban!");
-    }
+  const args = message.content.slice(1).trim().split(/ +/);
+  const command = args.shift().toLowerCase();
 
-    // Get the reason (everything after the mention)
-    const reason = message.content.split(user)[1].trim() || 'No reason provided';
-
-    // Attempt to ban the user
-    message.guild.members.ban(user, { reason: reason })
-      .then(() => {
-        message.reply(`Successfully banned ${user.tag} for reason: ${reason}`);
-      })
-      .catch(error => {
-        message.reply(`Failed to ban ${user.tag}: ${error}`);
-      });
-  }
+  // Now you can use 'command' and 'args' in your bot logic
 });
                     </code></pre>
                 </section>
 
-                <section class="mb-8">
-                    <h2 class="text-2xl font-bold mb-4">Handling Arguments</h2>
-                    <p class="mb-4">To handle command arguments more efficiently, you can split the message content:</p>
-                    <pre><code class="language-javascript">
+                <section class="mt-8">
+                    <h2 class="section-title">5. Example: Echo Command</h2>
+                    <p>Let's create an echo command to demonstrate how to use arguments:</p>
+                    <pre class="code-block"><code class="language-javascript">
 client.on('messageCreate', (message) => {
   if (!message.content.startsWith('!')) return;
 
@@ -139,6 +123,117 @@ client.on('messageCreate', (message) => {
   }
 });
                     </code></pre>
+                    <p>Now, if a user types "!echo Hello, world!", the bot will respond with "Hello, world!"</p>
+                </section>
+
+                <section class="mt-8">
+                    <h2 class="section-title">6. Understanding Permissions</h2>
+                    <p>Discord uses a permission system to control what actions users and bots can perform. Here's how to check for permissions:</p>
+                    <pre class="code-block"><code class="language-javascript">
+if (message.member.permissions.has('ADMINISTRATOR')) {
+  // User has admin permissions
+}
+
+if (message.member.permissions.has('BAN_MEMBERS')) {
+  // User can ban members
+}
+                    </code></pre>
+                </section>
+
+                <section class="mt-8">
+                    <h2 class="section-title">7. Example: Ban Command</h2>
+                    <p>Let's create a ban command that checks for permissions:</p>
+                    <pre class="code-block"><code class="language-javascript">
+client.on('messageCreate', (message) => {
+  if (!message.content.startsWith('!')) return;
+
+  const args = message.content.slice(1).trim().split(/ +/);
+  const command = args.shift().toLowerCase();
+
+  if (command === 'ban') {
+    if (!message.member.permissions.has('BAN_MEMBERS')) {
+      return message.reply("You don't have permission to use this command.");
+    }
+
+    const user = message.mentions.users.first();
+    if (!user) {
+      return message.reply("You need to mention a user to ban!");
+    }
+
+    const reason = args.slice(1).join(' ') || 'No reason provided';
+
+    message.guild.members.ban(user, { reason: reason })
+      .then(() => {
+        message.reply(`Successfully banned ${user.tag} for reason: ${reason}`);
+      })
+      .catch(error => {
+        message.reply(`Failed to ban ${user.tag}: ${error}`);
+      });
+  }
+});
+                    </code></pre>
+                </section>
+
+                <section class="mt-8">
+                    <h2 class="section-title">8. Putting It All Together: Basic Bot</h2>
+                    <p>Here's a basic bot that incorporates all the concepts we've covered:</p>
+                    <pre class="code-block"><code class="language-javascript">
+const { Client, GatewayIntentBits } = require('discord.js');
+
+const client = new Client({
+  intents: [
+    GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.MessageContent,
+  ]
+});
+
+client.on('ready', () => {
+  console.log(`Logged in as ${client.user.tag}!`);
+  client.user.setActivity('with Discord.js', { type: 'PLAYING' });
+});
+
+client.on('messageCreate', (message) => {
+  if (!message.content.startsWith('!')) return;
+
+  const args = message.content.slice(1).trim().split(/ +/);
+  const command = args.shift().toLowerCase();
+
+  switch(command) {
+    case 'ping':
+      message.reply('Pong!');
+      break;
+    case 'echo':
+      if (!args.length) {
+        return message.reply('You need to provide some text to echo!');
+      }
+      message.channel.send(args.join(' '));
+      break;
+    case 'ban':
+      if (!message.member.permissions.has('BAN_MEMBERS')) {
+        return message.reply("You don't have permission to use this command.");
+      }
+      const user = message.mentions.users.first();
+      if (!user) {
+        return message.reply("You need to mention a user to ban!");
+      }
+      const reason = args.slice(1).join(' ') || 'No reason provided';
+      message.guild.members.ban(user, { reason: reason })
+        .then(() => {
+          message.reply(`Successfully banned ${user.tag} for reason: ${reason}`);
+        })
+        .catch(error => {
+          message.reply(`Failed to ban ${user.tag}: ${error}`);
+        });
+      break;
+    default:
+      message.reply('Unknown command. Try !ping, !echo, or !ban.');
+  }
+});
+
+client.login('YOUR_BOT_TOKEN');
+                    </code></pre>
+                    <p>This bot includes a ping command, an echo command that uses arguments, and a ban command that checks for permissions.</p>
                 </section>
             </main>
         </div>
