@@ -279,7 +279,7 @@ client.login('YOUR_BOT_TOKEN');
 };
 
 function createButtons() {
-    const navButtons = document.getElementById('flex flex-wrap gap-2');
+    const navButtons = document.getElementById('nav-buttons');
     for (const sectionKey in sections) {
         const button = document.createElement('button');
         button.textContent = sectionKey.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
