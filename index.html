@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discord.js v14 Bot Tutorial</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/prism.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css">
+</head>
+<body class="bg-gray-200 dark:bg-black">
+    <div id="app" class="min-h-screen p-4">
+        <div class="max-w-4xl mx-auto bg-white dark:bg-gray-800 bg-opacity-90 rounded-3xl overflow-hidden shadow-2xl">
+            <nav class="p-4 bg-gray-100 dark:bg-gray-700">
+                <div class="container mx-auto flex justify-between items-center">
+                    <h1 class="text-xl font-bold text-gray-900 dark:text-white">Discord.js v14 Bot Tutorial</h1>
+                    <button id="themeToggle" class="p-2 rounded-full hover:bg-gray-300 dark:hover:bg-gray-600">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                        </svg>
+                    </button>
+                </div>
+            </nav>
+            
+            <main class="container mx-auto p-6 text-gray-900 dark:text-white">
+                <section class="mb-8">
+                    <h2 class="text-2xl font-bold mb-4">Setting up a Basic Discord Bot</h2>
+                    <ol class="list-decimal list-inside space-y-2">
+                        <li>Install Node.js and npm</li>
+                        <li>Create a new project directory</li>
+                        <li>Initialize a new npm project: <code class="px-2 py-1 rounded bg-gray-200 dark:bg-gray-700">npm init -y</code></li>
+                        <li>Install discord.js: <code class="px-2 py-1 rounded bg-gray-200 dark:bg-gray-700">npm install discord.js</code></li>
+                        <li>Create a new file named <code class="px-2 py-1 rounded bg-gray-200 dark:bg-gray-700">bot.js</code></li>
+                    </ol>
+                </section>
+                
+                <section class="mb-8">
+                    <h2 class="text-2xl font-bold mb-4">Basic Bot Code</h2>
+                    <pre><code class="language-javascript">
+const { Client, GatewayIntentBits } = require('discord.js');
+const client = new Client({
+  intents: [
+    GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.MessageContent,
+  ]
+});
+
+client.on('ready', () => {
+  console.log(`Logged in as ${client.user.tag}!`);
+});
+
+client.on('messageCreate', (message) => {
+  if (message.content === 'ping') {
+    message.reply('Pong!');
+  }
+});
+
+client.login('YOUR_BOT_TOKEN');
+                    </code></pre>
+                </section>
+                
+                <section class="mb-8">
+                    <h2 class="text-2xl font-bold mb-4">Upgrading from v13 to v14</h2>
+                    <ul class="list-disc list-inside space-y-2">
+                        <li>Flags now use ThisStyle instead of THIS_STYLE formatting</li>
+                        <li>MessageContent intent is now required for accessing message content</li>
+                        <li>The 'message' event is now 'messageCreate'</li>
+                    </ul>
+                </section>
+                
+                <section>
+                    <h2 class="text-2xl font-bold mb-4">Example Upgrades</h2>
+                    <div class="p-4 rounded-lg bg-gray-200 dark:bg-gray-700">
+                        <p class="mb-2">v13:</p>
+                        <code>Intents.FLAGS.GUILD_MESSAGES</code>
+                        <p class="mt-4 mb-2">v14:</p>
+                        <code>GatewayIntentBits.GuildMessages</code>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        const themeToggle = document.getElementById('themeToggle');
+        const html = document.documentElement;
+
+        themeToggle.addEventListener('click', () => {
+            html.classList.toggle('dark');
+        });
+
+        // Initialize theme based on user preference
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            html.classList.add('dark');
+        }
+
+        // Highlight code blocks
+        Prism.highlightAll();
+    </script>
+</body>
+</html>
