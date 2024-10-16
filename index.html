@@ -7,13 +7,28 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/prism.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        epic: {
+                            light: '#f5f5f5',
+                            dark: '#121212',
+                        },
+                    },
+                },
+            },
+        }
+    </script>
 </head>
-<body class="bg-gray-200 dark:bg-black">
+<body class="bg-epic-light dark:bg-epic-dark text-gray-900 dark:text-gray-100 transition-colors duration-200">
     <div id="app" class="min-h-screen p-4">
-        <div class="max-w-4xl mx-auto bg-white dark:bg-gray-800 bg-opacity-90 rounded-3xl overflow-hidden shadow-2xl">
+        <div class="max-w-4xl mx-auto bg-white dark:bg-gray-800 rounded-3xl overflow-hidden shadow-2xl">
             <nav class="p-4 bg-gray-100 dark:bg-gray-700">
                 <div class="container mx-auto flex justify-between items-center">
-                    <h1 class="text-xl font-bold text-gray-900 dark:text-white">Discord.js v14 Bot Tutorial</h1>
+                    <h1 class="text-xl font-bold">Discord.js v14 Bot Tutorial</h1>
                     <button id="themeToggle" class="p-2 rounded-full hover:bg-gray-300 dark:hover:bg-gray-600">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
@@ -22,7 +37,7 @@
                 </div>
             </nav>
             
-            <main class="container mx-auto p-6 text-gray-900 dark:text-white">
+            <main class="container mx-auto p-6">
                 <section class="mb-8">
                     <h2 class="text-2xl font-bold mb-4">Setting up a Basic Discord Bot</h2>
                     <ol class="list-decimal list-inside space-y-2">
@@ -48,6 +63,7 @@ const client = new Client({
 
 client.on('ready', () => {
   console.log(`Logged in as ${client.user.tag}!`);
+  client.user.setActivity('with Discord.js', { type: 'PLAYING' });
 });
 
 client.on('messageCreate', (message) => {
@@ -61,22 +77,68 @@ client.login('YOUR_BOT_TOKEN');
                 </section>
                 
                 <section class="mb-8">
-                    <h2 class="text-2xl font-bold mb-4">Upgrading from v13 to v14</h2>
-                    <ul class="list-disc list-inside space-y-2">
-                        <li>Flags now use ThisStyle instead of THIS_STYLE formatting</li>
-                        <li>MessageContent intent is now required for accessing message content</li>
-                        <li>The 'message' event is now 'messageCreate'</li>
-                    </ul>
+                    <h2 class="text-2xl font-bold mb-4">Setting Bot Status/Activity</h2>
+                    <p class="mb-4">You can set your bot's status using the <code>setActivity</code> method:</p>
+                    <pre><code class="language-javascript">
+client.user.setActivity('with Discord.js', { type: 'PLAYING' });
+                    </code></pre>
+                    <p class="mt-4">Other activity types include 'WATCHING', 'LISTENING', and 'STREAMING'.</p>
                 </section>
-                
-                <section>
-                    <h2 class="text-2xl font-bold mb-4">Example Upgrades</h2>
-                    <div class="p-4 rounded-lg bg-gray-200 dark:bg-gray-700">
-                        <p class="mb-2">v13:</p>
-                        <code>Intents.FLAGS.GUILD_MESSAGES</code>
-                        <p class="mt-4 mb-2">v14:</p>
-                        <code>GatewayIntentBits.GuildMessages</code>
-                    </div>
+
+                <section class="mb-8">
+                    <h2 class="text-2xl font-bold mb-4">Example Command: Ban User</h2>
+                    <p class="mb-4">Here's an example of a ban command that checks for permissions and uses arguments:</p>
+                    <pre><code class="language-javascript">
+client.on('messageCreate', (message) => {
+  // Check if the message starts with the command prefix and is "ban"
+  if (message.content.startsWith('!ban')) {
+    // Check if the user has permission to ban members
+    if (!message.member.permissions.has('BAN_MEMBERS')) {
+      return message.reply("You don't have permission to use this command.");
+    }
+
+    // Get the mentioned user
+    const user = message.mentions.users.first();
+    
+    // If no user is mentioned, return an error
+    if (!user) {
+      return message.reply("You need to mention a user to ban!");
+    }
+
+    // Get the reason (everything after the mention)
+    const reason = message.content.split(user)[1].trim() || 'No reason provided';
+
+    // Attempt to ban the user
+    message.guild.members.ban(user, { reason: reason })
+      .then(() => {
+        message.reply(`Successfully banned ${user.tag} for reason: ${reason}`);
+      })
+      .catch(error => {
+        message.reply(`Failed to ban ${user.tag}: ${error}`);
+      });
+  }
+});
+                    </code></pre>
+                </section>
+
+                <section class="mb-8">
+                    <h2 class="text-2xl font-bold mb-4">Handling Arguments</h2>
+                    <p class="mb-4">To handle command arguments more efficiently, you can split the message content:</p>
+                    <pre><code class="language-javascript">
+client.on('messageCreate', (message) => {
+  if (!message.content.startsWith('!')) return;
+
+  const args = message.content.slice(1).trim().split(/ +/);
+  const command = args.shift().toLowerCase();
+
+  if (command === 'echo') {
+    if (!args.length) {
+      return message.reply('You need to provide some text to echo!');
+    }
+    message.channel.send(args.join(' '));
+  }
+});
+                    </code></pre>
                 </section>
             </main>
         </div>
@@ -86,13 +148,26 @@ client.login('YOUR_BOT_TOKEN');
         const themeToggle = document.getElementById('themeToggle');
         const html = document.documentElement;
 
+        function setTheme(isDark) {
+            if (isDark) {
+                html.classList.add('dark');
+            } else {
+                html.classList.remove('dark');
+            }
+            localStorage.setItem('dark-mode', isDark);
+        }
+
         themeToggle.addEventListener('click', () => {
-            html.classList.toggle('dark');
+            const isDark = !html.classList.contains('dark');
+            setTheme(isDark);
         });
 
-        // Initialize theme based on user preference
-        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-            html.classList.add('dark');
+        // Initialize theme based on user preference or saved setting
+        const savedTheme = localStorage.getItem('dark-mode');
+        if (savedTheme !== null) {
+            setTheme(savedTheme === 'true');
+        } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            setTheme(true);
         }
 
         // Highlight code blocks
